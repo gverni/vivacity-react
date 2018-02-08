@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
-const DOMParser = require('xmldom').DOMParser
-const XMLSerializer = require('xmldom').XMLSerializer
+// const DOMParser = require('xmldom').DOMParser
+// const XMLSerializer = require('xmldom').XMLSerializer
 const debug = require('debug')('vitality')
 
 // Extend Date object to add week number ISO calculation
@@ -128,22 +128,20 @@ var Vitality = function () {
   }
 
   function parseStatementToArray (strStatement) {
-    var document = new DOMParser().parseFromString(strStatement)
-    var serializer = new XMLSerializer()
-    var statementElements = document.getElementsByTagName('ul') // Each statement entry is in a <ul> 
-    for (let i = 0; i < statementElements.length; i++) {
-      let itemDetails = statementElements[i].getElementsByTagName('div')
-      let itemObj = {}
+    var statementDetails = strStatement.split('<li data-categorylist="true" class="gray-bg padding0">')
+    statementDetails.forEach((item) => {
       try {
-        itemObj.date = /<h3 class="date">(.*?)<\/h3>/.exec(serializer.serializeToString(itemDetails[0]))[1]
-        itemObj.name = /<h3 class="firstname">(.*?)<\/h3>/.exec(serializer.serializeToString(itemDetails[1]))[1]
-        itemObj.points = /class="fields points">(.*?)<\/span>/.exec(serializer.serializeToString(itemDetails[6]))[1]
+        let itemObj = {}
+        itemObj.date = /<h3 class="date">(.*?)<\/h3>/.exec(item)[1]
+        itemObj.name = /<h3 class="firstname">(.*?)<\/h3>/.exec(item)[1]
+        itemObj.points = /class="fields points">(.*?)<\/span>/.exec(item)[1]
         statementItems.push(itemObj)
       } catch (err) {
         debug('Error: ' + err)
-        debug('Parsing: ' + serializer.serializeToString(statementElements[i]))
+        debug('Parsing: ' + item)
       }
-    }
+    })
+    debug('parseStatementToArray: Processed ' + statementItems.length + ' element in statment')
   }
 
     // RefreshHeaderData is a specific API in vitality website that returns a
