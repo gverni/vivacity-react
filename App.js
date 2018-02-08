@@ -1,43 +1,47 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 
-export default class App extends React.Component {
-  constructor (props) {
-    super(props)
+const Vitality = require('./Vitality.js');
+var vitality = new Vitality();
+
+export default class Movies extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      text: 'Hello'
-    }
+      isLoading: true,
+    };
   }
 
-  componentDidMount () {
-    this.setState((previousState) => {
-      return {text: 'Log-in....'}
-    })
-
-    loginVitality()
-     .then(response => response.text())
-     .then(responseBody => {
-       this.setState({text: 'login succesful!' + responseBody})
-     })
-     .catch((err) => (
-       this.setState({text: 'Error login' + err})
-     ))
+  componentDidMount() {
+    return vitality
+      .login({ user: '', password: '' })
+      .then(() => {
+        return vitality.getWeeklypoints();
+      })
+      .then(weeklyPoints => {
+        this.setState({
+          isLoading: false,
+          text: 'Weekly Points' + weeklyPoints,
+        });
+      })
+      .catch(err => {
+        console.log('Error: ' + err);
+      });
   }
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, paddingTop: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1, paddingTop: 20 }}>
         <Text>{this.state.text}</Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
