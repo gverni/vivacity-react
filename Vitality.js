@@ -118,7 +118,7 @@ var Vitality = function () {
     parseStatementToArray(strStatement)
     if (statementItems.length) {
       statementItems.forEach((item) => {
-        let fullDate = item.date + ((new DateWeek(item.date + (new DateWeek()).getFullYear()) > new DateWeek()) ? (new DateWeek()).getFullYear() - 1 : (new DateWeek()).getFullYear())
+        let fullDate = item.date + ' ' + ((new DateWeek(item.date + (new DateWeek()).getFullYear()) > new DateWeek()) ? (new DateWeek()).getFullYear() - 1 : (new DateWeek()).getFullYear())
         let dateWeekNo = (new DateWeek(fullDate)).getWeek()
         let firstName = item.name
         let points = item.points
