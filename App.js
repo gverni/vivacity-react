@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
+import { Vitality } from './Vitality-react.js';
 
-const Vitality = require('./Vitality.js');
-var vitality = new Vitality();
 
 export default class Movies extends Component {
   constructor(props) {
@@ -13,19 +12,26 @@ export default class Movies extends Component {
   }
 
   componentDidMount() {
+    var vitality = new Vitality();
     return vitality
-      .login({ user: '', password: '' })
+      .login({username: '', password: ''})
       .then(() => {
+        console.log('Getting weekly point');
         return vitality.getWeeklypoints();
       })
       .then(weeklyPoints => {
-        this.setState({
-          isLoading: false,
-          text: 'Weekly Points' + weeklyPoints,
-        });
+        this.setState(
+          {
+            isLoading: false,
+            text: 'Weekly points ' + weeklyPoints,
+          },
+          function() {
+            // do something with new state
+          }
+        );
       })
-      .catch(err => {
-        console.log('Error: ' + err);
+      .catch(error => {
+        console.error(error);
       });
   }
 
