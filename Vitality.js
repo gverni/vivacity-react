@@ -54,7 +54,13 @@ var Vitality = function () {
         'Content-type': 'application/json;charset=UTF-8'
       }
     }).then(response => {
-      cookies = response.headers['_headers']['set-cookie']
+      if (response.headers.hasOwnProperty('_headers')) {
+        // node-fetch fetch header
+        cookies = response.headers['_headers']['set-cookie']
+      } else if (response.headers.hasOwnProperty('map')) {
+        // react-native fetch header
+        cookies = response.headers['map']['set-cookie']
+      }
       return response.text()
     }).then(() => {
       debug('login succesful')
