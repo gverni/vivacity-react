@@ -1,6 +1,4 @@
 const fetch = require('node-fetch')
-// const DOMParser = require('xmldom').DOMParser
-// const XMLSerializer = require('xmldom').XMLSerializer
 const debug = require('debug')('vitality')
 
 // Extend Date object to add week number ISO calculation
@@ -147,7 +145,7 @@ var Vitality = function () {
         debug('Parsing: ' + item)
       }
     })
-    debug('parseStatementToArray: Processed ' + statementItems.length + ' element in statment')
+    debug('parseStatementToArray: Processed ' + statementItems.length + ' element in statement')
   }
 
     // RefreshHeaderData is a specific API in vitality website that returns a
